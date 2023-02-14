@@ -5,12 +5,18 @@ const Header = (props) => {
     </div>
   )
 }
+const Part = (props) => {
+  return (
+    <div>
+      <p>{props.name} - {props.points} points</p>
+    </div>
+  )
+}
 
 const Content = (props) => {
   return (
     <div>
-      <p>{props.name} - {props.points} points</p>
-
+      <Part name = {props.name} Part points = {props.points}/>
     </div>
   )
 }
