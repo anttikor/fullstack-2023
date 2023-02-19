@@ -30,22 +30,34 @@ const App = () => {
     </div>
     )
   }
+  const HowManyVotes = (props) => {
+    return(
+      <div>
+        has {votes[props.index]} votes
+      </div>
+    )
+  }
   const PrintAnecdote = (props) => {
     return(
       <div>
         {anecdotes[props.selected]}
+        <HowManyVotes index = {props.selected} />
       </div>
     )
   }
   const MostPopular = () => {
-    return 1
+    const maxIndex = votes.indexOf(Math.max(...votes))
+    console.log("maxIndex: ", maxIndex)
+    return maxIndex
   }
-  const Votes = [0,0,0,0,0,0,0]
+  const [votes, setVotes] = useState([0,0,0,0,0,0,0,0])
+
   const AddToVotes = () => {
-    
-
+    const newNotes = [...votes]
+    newNotes[selected] += 1
+    console.log("votes: ", newNotes)
+    setVotes(newNotes)    
   }
-
 
   return (
     <div>
