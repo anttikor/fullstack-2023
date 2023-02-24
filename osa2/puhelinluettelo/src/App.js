@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Person from './components/Phonebook'
 
 const App = (props) => {
-  const [persons, setpersons] = useState(props.persons)
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')  
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -24,7 +35,7 @@ const App = (props) => {
       name: newName,
       number: newNumber,
     }
-    setpersons(persons.concat(personObject))
+    setPersons(persons.concat(personObject))
     setNewName('')
   }
   const handleNameChange = (event) => {
