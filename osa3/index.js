@@ -1,7 +1,29 @@
 const express = require('express')
+const morgan = require('morgan')
+const bodyParser = require('body-parser')
+
+
 const app = express()
 
 app.use(express.json())
+app.use(bodyParser.json())
+
+
+app.use(morgan(function (tokens, req, res) {
+    let feedback = [
+      tokens.method(req, res),
+      tokens.url(req, res),
+      tokens.status(req, res),
+      tokens.res(req, res, 'content-length'), '-',
+      tokens['response-time'](req, res), 'ms',      
+    ]
+    if (req.method === 'POST'){
+        postData = JSON.stringify(req.body)
+        feedback.push(postData)
+    }    
+    return feedback.join(' ')
+  }))
+
 
 let persons = [
   {
