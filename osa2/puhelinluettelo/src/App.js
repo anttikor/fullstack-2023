@@ -16,7 +16,7 @@ const App = (props) => {
       .then(initialPersons => {
         setPersons(initialPersons)
       })
-  }, [persons])
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()    
@@ -50,6 +50,9 @@ const App = (props) => {
         setNewNumber('')
         setErrorMessage(`'${newName}' added to phonebook`)
         setTimeout(() => {setErrorMessage(null)}, 5000)
+        noteService.getAll().then((response) => {
+          setPersons(response)
+        })
       })
   }
 
