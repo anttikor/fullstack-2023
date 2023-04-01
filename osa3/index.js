@@ -2,13 +2,11 @@ const express = require('express')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-app.use(cors())
-
 const app = express()
 
 app.use(express.json())
 app.use(bodyParser.json())
-
+app.use(cors())
 
 
 app.use(morgan(function (tokens, req, res) {
