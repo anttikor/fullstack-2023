@@ -1,29 +1,27 @@
-# fly.toml file generated for phonebookak on 2023-04-01T11:57:13+03:00
+# fly.toml file generated for phonebookak on 2023-04-01T13:44:41+03:00
 
 app = "phonebookak"
 kill_signal = "SIGINT"
 kill_timeout = 5
-mounts = []
-primary_region = "arn"
-processes = []
+primary_region = "ams"
 
 [env]
-  PORT = "8080" # lisätään tämä
+  PORT = "8080"
 
 [[services]]
+  protocol = "tcp"
   internal_port = 8080
   processes = ["app"]
-  protocol = "tcp"
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
   [services.concurrency]
+    type = "connections"
     hard_limit = 25
     soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443

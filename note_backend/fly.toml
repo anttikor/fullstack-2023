@@ -1,37 +1,32 @@
-# fly.toml file generated for noteback on 2023-03-30T17:10:17+03:00
+# fly.toml file generated for noteback on 2023-04-01T13:45:19+03:00
 
 app = "noteback"
 kill_signal = "SIGINT"
 kill_timeout = 5
-mounts = []
-primary_region = "arn"
-processes = []
+primary_region = "ams"
 
 [env]
   PORT = "8080"
 
-[experimental]
-  auto_rollback = true
-
 [[services]]
-  http_checks = []
-  internal_port = 8080 
-  processes = ["app"]  
-
-[[services]]
+  protocol = ""
   internal_port = 8080
   processes = ["app"]
+
+[[services]]
   protocol = "tcp"
+  internal_port = 8080
+  processes = ["app"]
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+    force_https = true
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
   [services.concurrency]
+    type = "connections"
     hard_limit = 25
     soft_limit = 20
-    type = "connections"
-
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
-
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
