@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "axios"
 const baseUrl = '/api/persons'
 
 const phonebookService = {
@@ -16,7 +16,7 @@ create: newObject => {
 },
 
 remove: (id) => {
-    return axios.delete(`${baseUrl}/${id}`);
+    return axios.delete(`${baseUrl}/${id}`)
 },
 
 update: (id, newObject) => {

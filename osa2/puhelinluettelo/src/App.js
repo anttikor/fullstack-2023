@@ -19,9 +19,9 @@ const App = (props) => {
   }, [])
 
   const addPerson = (event) => {
-    event.preventDefault();
+    event.preventDefault()
   
-    const oldPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
+    const oldPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase())
   
     if (persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())) {
       const doWeAdd = window.confirm(
@@ -38,7 +38,7 @@ const App = (props) => {
           setNewNumber('')
           setErrorMessage(`'${updatedPerson.name}' number updated`)
           setTimeout(() => {
-            setErrorMessage(null);
+            setErrorMessage(null)
           }, 5000)
         })
       }
