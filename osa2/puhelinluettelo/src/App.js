@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Person from './components/Phonebook'
 import Notification from './components/Notification'
-import noteService from './services/phonebook'
+import phonebookService from './services/phonebook'
 
 
 const App = (props) => {
@@ -11,7 +11,7 @@ const App = (props) => {
   const [errorMessage, setErrorMessage] = useState(null)  
 
   useEffect(() => {
-    noteService
+    phonebookService
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
@@ -19,54 +19,59 @@ const App = (props) => {
   }, [])
 
   const addPerson = (event) => {
-    event.preventDefault()    
+    event.preventDefault();
   
-    const isDuplicate = persons.some(person => person.name === newName)
-    const oldPerson = persons.find(person => person.name === newName)    
-    if (persons.some(person => person.name.toLowerCase() === newName.toLowerCase())) {
-      const doWeAdd = window.confirm(`${newName} is already added to phonebook. Do you want to update the number?`)
-      if (doWeAdd){
-        noteService.update(oldPerson.id, {...oldPerson, number: newNumber})
-          .then(returnedPerson => {
-            setPersons(persons.map(person =>person.id !== oldPerson.id ? person : returnedPerson))
-            setNewPerson('')
-            setNewNumber('')
-            setErrorMessage(`'${newName}' number updated`)
-            setTimeout(() => {setErrorMessage(null)}, 5000)
-          })
-      }      
+    const oldPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
+  
+    if (persons.some((person) => person.name.toLowerCase() === newName.toLowerCase())) {
+      const doWeAdd = window.confirm(
+        `${newName} is already added to phonebook. Do you want to update the number?`
+      )
+      if (doWeAdd) {
+        phonebookService
+        .update(oldPerson.id, { ...oldPerson, number: newNumber })
+        .then((updatedPerson) => {
+          setPersons(
+            persons.map((person) => (person.id !== updatedPerson.id ? person : updatedPerson))
+          )
+          setNewPerson('')
+          setNewNumber('')
+          setErrorMessage(`'${updatedPerson.name}' number updated`)
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000)
+        })
+      }
       return
     }
-  
+    
     const personObject = {
       name: newName,
       number: newNumber,
     }
-    noteService
+  
+    phonebookService
       .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewPerson('')
-        setNewNumber('')
-        setErrorMessage(`'${newName}' added to phonebook`)
-        setTimeout(() => {setErrorMessage(null)}, 5000)
-        noteService.getAll().then((response) => {
-          setPersons(response)
+      .then(() => {
+        phonebookService.getAll().then((updatedPersons) => {
+          setPersons(updatedPersons)
+          setNewPerson('')
+          setNewNumber('')
+          setErrorMessage(`'${personObject.name}' added to phonebook`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
       })
-  }
-
-  const handleRemovePerson = (id) => {
-
+      .catch((error) => {
+        setErrorMessage(`${error.response.data.error}`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
   }
   
-  {persons.map((person) => (
-    <Person
-      key={person.id}
-      person={person}
-      handleRemovePerson={() => handleRemovePerson(person.id)}
-    />
-  ))}
+ 
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewPerson(event.target.value)
@@ -76,7 +81,7 @@ const App = (props) => {
     setNewNumber(event.target.value)
   }
   const handleRemove = (personToDelete) => {
-      noteService
+      phonebookService
         .remove(personToDelete.id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== personToDelete.id))
