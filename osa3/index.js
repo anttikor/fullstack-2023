@@ -26,7 +26,6 @@ const errorHandler = (error, req, res, next) => {
     }    
     //next(error)
   }
-  
 
 app.use(express.json())
 app.use(bodyParser.json())
